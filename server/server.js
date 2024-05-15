@@ -12,6 +12,7 @@ app.use(cors());
 dbConnection();
 
 app.use("/api/food", foodRouter);
+app.use("/api/images", express.static('uploads'));
 
 app.get("/", (req, res) => {
   res.send("API working");
