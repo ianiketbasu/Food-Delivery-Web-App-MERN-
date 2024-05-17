@@ -1,15 +1,20 @@
-import React, { useContext } from "react";
+/* eslint-disable react/prop-types */
+import { useContext } from "react";
 import "./FoodItem.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 
 const FoodItem = ({ id, name, price, description, image }) => {
-  const { cartItems, setCartItems, addToCart, removeFromCart } =
+  const { cartItems, setCartItems, addToCart, removeFromCart, backend_url } =
     useContext(StoreContext);
   return (
     <div className="food-item">
       <div className="food-item-image-container">
-        <img className="food-item-image" src={image} alt="food image" />
+        <img
+          className="food-item-image"
+          src={backend_url + "/api/images/" + image}
+          alt="food image"
+        />
         {!cartItems[id] ? (
           <img
             className="add"

@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { assets } from "../../assets/assets";
 import "./Add.css";
+import axios from "axios";
+import { backend_url } from "../../../utils";
+import { toast } from "react-toastify";
 
 const Add = () => {
   const [image, setImage] = useState(false);
@@ -17,12 +20,34 @@ const Add = () => {
     setData((data) => ({ ...data, [name]: value }));
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    const fromData = new FormData();
+    fromData.append("name", data.name);
+    fromData.append("description", data.description);
+    fromData.append("price", Number(data.price));
+    fromData.append("category", data.category);
+    fromData.append("image", image);
+
+    const response = await axios.post(`${backend_url}/api/food/add`, fromData);
+
+    if (response.data.success) {
+      setData({
+        name: "",
+        description: "",
+        price: "",
+        category: "Salad",
+      });
+      setImage(false);
+      toast.success(response.data.message);
+    } else {
+      toast.error(response.data.message);
+      console.log("error");
+    }
+  };
   return (
     <div className="add">
-      <from className="flex-col">
+      <form className="flex-col" onSubmit={onSubmitHandler}>
         <div className="add-img-upload flex-col">
           <label htmlFor="image">
             <img
@@ -35,7 +60,6 @@ const Add = () => {
             type="file"
             id="image"
             hidden
-            required
           />
         </div>
         <div className="add-product-name">
@@ -87,7 +111,7 @@ const Add = () => {
         <button type="submit" className="add-btn">
           ADD
         </button>
-      </from>
+      </form>
     </div>
   );
 };
